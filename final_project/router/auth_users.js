@@ -3,10 +3,12 @@ const jwt = require('jsonwebtoken');
 let books = require("./booksdb.js");
 const regd_users = express.Router();
 
-let users = [];
+let users = [
+    {"username": "user2", "password": "password2"}
+];
 
 const isValid = (username)=>{ //returns boolean
-    return users.includes(username);
+    return users.filter(user => user.username === username).length > 0;
 }
 
 const authenticatedUser = (username,password)=>{ //returns boolean
@@ -15,14 +17,15 @@ const authenticatedUser = (username,password)=>{ //returns boolean
 
 //only registered users can login
 regd_users.post("/login", (req,res) => {
-    if (!req.params.username) {
+    let formData = req.body;
+    if (!formData["username"]) {
         return res.status(400).json({message: "Username is required"});
-    } else if (!req.params.password) {
+    } else if (!formData["password"]) {
         return res.status(400).json({message: "Password is required"});
     }
 
-    let username = req.params.username;
-    let password = req.params.password;
+    let username = formData["username"];
+    let password = formData["password"];
     if (!isValid(username)) {
         return res.status(401).json({message: "Username does not exist"});
     } else if (!authenticatedUser(username,password)) {

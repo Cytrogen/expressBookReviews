@@ -52,14 +52,15 @@ const getBooksByTitle = (title) => {
 
 
 public_users.post("/register", (req,res) => {
-    if (!req.params.username) {
+    let formData = req.body;
+    if (!formData["username"]) {
         return res.status(400).json({message: "Username is required"});
-    } else if (!req.params.password) {
+    } else if (!formData["password"]) {
         return res.status(400).json({message: "Password is required"});
     }
 
-    let username = req.params.username;
-    let password = req.params.password;
+    let username = formData["username"];
+    let password = formData["password"];
     if (isValid(username)) {
         return res.status(409).json({message: "Username already exists"});
     } else {

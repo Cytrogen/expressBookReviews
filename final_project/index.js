@@ -11,7 +11,7 @@ app.use(express.json());
 app.use("/customer",session({secret:"fingerprint_customer",resave: true, saveUninitialized: true}))
 
 app.use("/customer/auth/*", function auth(req,res,next){
-    let token = req.session.authorization;
+    let token = req.headers["authorization"];
     if (!token) return res.status(401).json({message: "No token provided"});
 
     jwt.verify(token, "expressBookReviews", function(err, user) {
